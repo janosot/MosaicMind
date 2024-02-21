@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/linearLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    android:gravity="center"
+    android:weightSum="3"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:id="@+id/brainIcon"
+        android:layout_width="234dp"
+        android:layout_height="153dp"
+        android:layout_marginEnd="24dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@drawable/brain"
+        tools:layout_editor_absoluteY="84dp" />
+
+    <ImageView
+        android:id="@+id/title"
+        android:layout_width="366dp"
+        android:layout_height="168dp"
+        android:layout_marginTop="104dp"
+        android:rotation="-4"
+        android:rotationY="4"
+        android:visibility="visible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/title" />
+
+    <Button
+        android:id="@+id/startButton"
+        android:layout_width="268dp"
+        android:layout_height="92dp"
+        android:background="@drawable/button_selector"
+        android:onClick="startGame"
+        app:layout_constraintBottom_toTopOf="@+id/difficultyRadioGroup"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title"
+        app:layout_constraintVertical_bias="0.8" />
+
+    <RadioGroup
+        android:id="@+id/difficultyRadioGroup"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:checkedButton="@+id/easyRadioButton"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/startButton"
+        app:layout_constraintVertical_bias="1">
+
+        <RadioButton
+            android:id="@+id/easyRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:button="@drawable/easy_selector" />
+
+        <RadioButton
+            android:id="@+id/mediumRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:button="@drawable/medium_selector" />
+
+        <RadioButton
+            android:id="@+id/difficultRadioButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:button="@drawable/hard_selector" />
+
+    </RadioGroup>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
