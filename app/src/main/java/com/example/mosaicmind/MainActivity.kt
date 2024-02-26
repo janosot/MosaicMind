@@ -30,4 +30,5 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("DIFFICULTY", selectedDifficulty)
         startActivity(intent)
     }
+
 }
