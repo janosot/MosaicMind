@@ -1,9 +1,11 @@
 package com.example.mosaicmind
 
 import android.content.Intent
+import android.graphics.Color
 import android.icu.lang.UCharacter.VerticalOrientation
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +15,7 @@ class GameActivity : AppCompatActivity() {
     private var difficulty: String? = null
     private var size: Int = 5
     private var lives: Int = 3
-    private var board: Array<Array<Boolean>> = Array(5){ Array(5) { false } }
+    private lateinit var board: Array<BooleanArray>
     private var remainingCells: Int = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,6 +32,7 @@ class GameActivity : AppCompatActivity() {
         val difficultyTextView: TextView = findViewById(R.id.difficultyTextView)
         difficultyTextView.text = "Selected Difficulty: $difficulty"
         */
+        board = Array(size) { BooleanArray(size) }
         initializeGame()
 
         val backButton: Button = findViewById(R.id.backButton)
@@ -37,54 +40,70 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun initializeGame() {
-        // TODO: Implement game initialization based on the difficulty level
 
         loadBoard(size)
 
-        remainingCells = size * size
-
         val board: LinearLayout = findViewById(R.id.Board)
-        for (rowNumber in 0..size) {
+        for (rowNumber in 0..<size) {
             val row = LinearLayout(this)
-
-            for (columnNumber in 0..size) {
+            board.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,1F))
+            for (columnNumber in 0..<size) {
 
                 val button = Button(this)
                 //button.text = "$rowNumber,$columnNumber"
+                /*
+                button.width = row.width / size
+                button.height = row.height / size*/
                 button.id = rowNumber * 100 + columnNumber
                 button.setOnClickListener { checkCell(button) }
-                row.addView(button)
+                row.addView(button, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,1F))
             }
-            board.addView(row)
+
         }
 
     }
 
     private fun loadBoard(size: Int) {
-        for(i in 0..size) {
-            for(j in 0..size) {
-                board[i][i] = (j % 2 == 0)
+        //TODO Load board from a file:
+        // Initialize board array
+        // Initialize NOF good cells and their caption to to View
+        for(i in 0..<size) {
+            for(j in 0..<size) {
+                if((j % 2 == 0)) remainingCells++
+                board[i][j] = (j % 2 == 0)
             }
         }
     }
 
     private fun checkCell(button: View) {
-
-        remainingCells--
         button.isClickable = false
         val rowNumber: Int = button.id / 100
         val columnNumber: Int = button.id % 100
         if(board[rowNumber][columnNumber]) {
-            button.setBackgroundColor(5)
+            remainingCells--
+            button.setBackgroundColor(Color.DKGRAY)
         }
         else
         {
-            button.setBackgroundColor(15)
+            button.setBackgroundColor(Color.RED)
             lives--
         }
 
+        checkGameStatus()
     }
 
+
+    fun checkGameStatus() {
+        if(lives <= 0) {
+            //TODO Show "You lose" message
+            finish()
+        }
+        if(remainingCells == 0) {
+            //TODO Show "You win" message
+            finish()
+        }
+
+    }
     fun goBack() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)

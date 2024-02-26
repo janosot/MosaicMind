@@ -1,25 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background"
     tools:context=".GameActivity">
+
+    <LinearLayout
+        android:id="@+id/Board"
+        android:layout_width="340dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="152dp"
+        android:layout_marginEnd="1dp"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/backButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="575dp"
+        android:layout_marginStart="16dp"
         android:layout_marginBottom="16dp"
+        android:gravity="center"
         android:onClick="goBack"
-        android:text="Back" />
+        android:text="Back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <LinearLayout
-        android:id="@+id/Board"
-        android:layout_width="350dp"
-        android:layout_height="350dp"
-        android:layout_marginTop="150dp"
-        android:orientation="vertical"></LinearLayout>
+        android:id="@+id/rowCaptions"
+        android:layout_width="60dp"
+        android:layout_height="400dp"
+        android:layout_marginTop="152dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toStartOf="@+id/Board"
+        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
 
-</RelativeLayout>
+    <LinearLayout
+        android:id="@+id/columnsCaptions"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="5dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/Board"
+        app:layout_constraintEnd_toEndOf="parent"></LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
