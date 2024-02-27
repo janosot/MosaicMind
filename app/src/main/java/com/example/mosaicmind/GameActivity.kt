@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import org.json.JSONArray
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlin.random.Random
 
 class GameActivity : AppCompatActivity() {
@@ -201,10 +202,9 @@ class GameActivity : AppCompatActivity() {
         if(colorMode) {
             if (finishedBoard[rowNumber][columnNumber]) {
                 remainingCells--
-
-                button.setBackgroundColor(Color.DKGRAY)
+                button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.darkGrey)
             } else {
-                button.setBackgroundColor(Color.RED)
+                button.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.holo_red_dark)
                 lives--
                 updateHearts()
             }
@@ -212,7 +212,9 @@ class GameActivity : AppCompatActivity() {
             if (!finishedBoard[rowNumber][columnNumber]) {
                 button.setBackgroundColor(Color.RED)
             } else {
-                button.setBackgroundColor(Color.DKGRAY)
+
+                button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.darkGrey)
+
                 remainingCells--
                 lives--
                 updateHearts()
