@@ -12,14 +12,37 @@
         android:id="@+id/Board"
         android:layout_width="340dp"
         android:layout_height="400dp"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="216dp"
         android:layout_marginEnd="1dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/rowCaptions"
+        android:layout_width="0dp"
+        android:layout_height="400dp"
+        android:layout_marginStart="5dp"
+        android:layout_marginTop="216dp"
+        android:layout_marginEnd="340dp"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <LinearLayout
+        android:id="@+id/columnsCaptions"
+        android:layout_width="340dp"
+        android:layout_height="60dp"
+        android:layout_marginStart="70dp"
+        android:layout_marginTop="156dp"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </LinearLayout>
 
     <ImageButton
         android:id="@+id/backButton"
@@ -35,56 +58,48 @@
         android:layout_marginBottom="16dp"/>
 
     <LinearLayout
-        android:id="@+id/rowCaptions"
-        android:layout_width="60dp"
-        android:layout_height="400dp"
-        android:layout_marginTop="152dp"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toStartOf="@+id/Board"
-        app:layout_constraintTop_toTopOf="parent"></LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/columnsCaptions"
-        android:layout_width="340dp"
-        android:layout_height="60dp"
-        android:layout_marginEnd="5dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/Board"
-        app:layout_constraintEnd_toEndOf="parent"></LinearLayout>
-
-    <LinearLayout
         android:id="@+id/heartContainer"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="96dp"
+        android:layout_marginBottom="8dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@+id/Board"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent">
+        app:layout_constraintBottom_toTopOf="@+id/columnsCaptions"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
             android:id="@+id/heart1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/heart_full"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/heart_full" />
 
         <ImageView
             android:id="@+id/heart2"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/heart_full"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/heart_full" />
 
         <ImageView
             android:id="@+id/heart3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/heart_full"
             android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp"/>
+            android:layout_marginEnd="8dp"
+            android:src="@drawable/heart_full" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/changeModeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="160dp"
+        android:layout_marginBottom="40dp"
+        android:text="Color"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
