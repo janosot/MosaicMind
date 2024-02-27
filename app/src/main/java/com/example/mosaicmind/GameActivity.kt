@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 
@@ -17,6 +19,9 @@ class GameActivity : AppCompatActivity() {
     private var lives: Int = 3
     private lateinit var board: Array<BooleanArray>
     private var remainingCells: Int = 0
+    private lateinit var heart1: ImageView
+    private lateinit var heart2: ImageView
+    private lateinit var heart3: ImageView
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -35,8 +40,12 @@ class GameActivity : AppCompatActivity() {
         board = Array(size) { BooleanArray(size) }
         initializeGame()
 
-        val backButton: Button = findViewById(R.id.backButton)
-        backButton.setOnClickListener { goBack() }
+        val backButton: ImageButton = findViewById(R.id.backButton)
+        backButton.setOnClickListener { view -> goBack(view) }
+
+        heart1 = findViewById(R.id.heart1)
+        heart2 = findViewById(R.id.heart2)
+        heart3 = findViewById(R.id.heart3)
     }
 
     private fun initializeGame() {
@@ -79,14 +88,13 @@ class GameActivity : AppCompatActivity() {
         button.isClickable = false
         val rowNumber: Int = button.id / 100
         val columnNumber: Int = button.id % 100
-        if(board[rowNumber][columnNumber]) {
+        if (board[rowNumber][columnNumber]) {
             remainingCells--
             button.setBackgroundColor(Color.DKGRAY)
-        }
-        else
-        {
+        } else {
             button.setBackgroundColor(Color.RED)
             lives--
+            updateHearts()
         }
 
         checkGameStatus()
@@ -102,11 +110,20 @@ class GameActivity : AppCompatActivity() {
             //TODO Show "You win" message
             finish()
         }
-
     }
-    fun goBack() {
+
+    private fun updateHearts() {
+        when (lives) {
+            2 -> heart3.setImageResource(R.drawable.heart_missing)
+            1 -> heart2.setImageResource(R.drawable.heart_missing)
+            0 -> heart1.setImageResource(R.drawable.heart_missing)
+        }
+    }
+
+    fun goBack(view: View) {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent)
         finish()
     }
+
 }
