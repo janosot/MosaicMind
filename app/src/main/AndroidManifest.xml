@@ -21,7 +21,6 @@
         <activity
             android:name=".GameActivity"
             android:exported="true">
-            <!-- Add any intent filters or configurations specific to GameActivity if needed -->
         </activity>
 
     </application>

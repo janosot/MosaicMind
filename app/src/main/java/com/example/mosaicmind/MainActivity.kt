@@ -10,6 +10,7 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var difficultyRadioGroup: RadioGroup
 
+    // Override function to handle the creation of the activity, with the savedInstanceState as a paramete
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -17,6 +18,8 @@ class MainActivity : AppCompatActivity() {
         difficultyRadioGroup = findViewById(R.id.difficultyRadioGroup)
     }
 
+    // Function to start the game with the selected difficulty level
+    // @param view The view that was clicked
     fun startGame(view: View) {
         val selectedDifficulty: String = when (difficultyRadioGroup.checkedRadioButtonId) {
             R.id.easyRadioButton -> "Easy"
@@ -29,5 +32,4 @@ class MainActivity : AppCompatActivity() {
         intent.putExtra("DIFFICULTY", selectedDifficulty)
         startActivity(intent)
     }
-
 }

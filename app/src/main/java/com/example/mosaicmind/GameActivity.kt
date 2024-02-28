@@ -39,6 +39,8 @@ class GameActivity : AppCompatActivity() {
     private lateinit var homeButton: Button
     private lateinit var restartButton: Button
 
+    // A function that is called when the activity is starting
+    // It initializes the game, sets button listeners, and initializes a popup window
     @SuppressLint("InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -90,6 +92,7 @@ class GameActivity : AppCompatActivity() {
         popupWindow.animationStyle = android.R.style.Animation_Dialog
     }
 
+    // Initializes the game by setting up the game board, adding buttons, and setting up click listeners for each button.
     private fun initializeGame() {
         val board: LinearLayout = findViewById(R.id.Board)
         board.removeAllViews()
@@ -132,6 +135,9 @@ class GameActivity : AppCompatActivity() {
         createBoardCaptions()
     }
 
+    // Retrieves a JSONArray from the specified resource
+    // @param resource - resource ID of the JSON
+    // Returns the JSONArray from the "board" key of the retrieved board object
     private fun getBoardFromResource(resource: Int): JSONArray {
         val jsonText = resources.openRawResource(resource)
             .bufferedReader().use { it.readText() }
@@ -146,7 +152,7 @@ class GameActivity : AppCompatActivity() {
         return boardObject.getJSONArray("board")
     }
 
-    //Helper function for creating TextViews for captions
+    // Helper function for creating TextViews for captions
     private fun createCaption(caption: String, isRow: Boolean): TextView {
         val captionView = TextView(this)
         captionView.text = caption
@@ -166,15 +172,19 @@ class GameActivity : AppCompatActivity() {
         return captionView
     }
 
-    //Count the game captions based on selected board and put then to their layouts
+    // Count the game captions based on selected board and put then to their layouts
     private fun createBoardCaptions() {
         createRowCaptions()
         createColumnCaptions()
     }
 
+    // Creates row captions for a given layout
     private fun createRowCaptions() {
         var captions = mutableListOf<String>()
         val rowCaptions: LinearLayout = findViewById(R.id.rowCaptions)
+
+        // To clear row captions after restart
+        rowCaptions.removeAllViews()
 
         for(rowNumber in 0..<size) {
             var blockSize = 0
@@ -207,9 +217,13 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    // Creates column captions based on the board's state and adds them to the specified LinearLayout
     private fun createColumnCaptions() {
         var captions = mutableListOf<String>()
         val columnCaptions: LinearLayout = findViewById(R.id.columnsCaptions)
+
+        // To clear column captions after restart
+        columnCaptions.removeAllViews()
 
         for(columnNumber in 0..<size) {
             var blockSize = 0
@@ -244,7 +258,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-    //Check if the clicked button is correct and update game state
+    // Check if the clicked button is correct and update game state
     private fun checkCell(button: View) {
         button.isClickable = false
         val rowNumber: Int = button.id / 100
@@ -281,6 +295,7 @@ class GameActivity : AppCompatActivity() {
         fillCompletedColumns()
     }
 
+    // Iterates through each row of the board, checks if the row is completed, and updates the UI accordingly
     private fun fillCompletedRows() {
         for (rowNumber in 0 until size) {
             var completedRow = true
@@ -300,6 +315,8 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
+
+    // Function to fill the completed columns on the board by comparing the current board with the finished board
     private fun fillCompletedColumns() {
         for (columnNumber in 0 until size) {
             var completedRow = true
@@ -319,17 +336,24 @@ class GameActivity : AppCompatActivity() {
             }
         }
     }
+
+    // Function to change the color mode of a view
+    // Takes a View as input parameter
     private fun changeColorMode(view: View) {
         colorMode = !colorMode
         val button: Button = view as Button
         button.text = if (colorMode) "Color" else "Cross"
     }
 
+    // Function to navigate to the main activity and finish the current activity
     fun goHome() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
     }
 
+    // Function to show a popup with a message and an optional restart button
+    // @param message: the message to be displayed in the popup (String)
+    // @param showRestartButton: a flag to indicate whether the restart button should be shown (Boolean, default = true)
     private fun showPopup(message: String, showRestartButton: Boolean = true) {
         popupMessageTextView.text = message
         homeButton.setOnClickListener {
@@ -350,10 +374,13 @@ class GameActivity : AppCompatActivity() {
         popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0)
     }
 
+    // Dismisses the popup
     private fun dismissPopup() {
         popupWindow.dismiss()
     }
 
+    // Check the game status and display appropriate popups and disable the grid
+    // based on the number of lives and remaining cells
     private fun checkGameStatus() {
         if (lives <= 0) {
             showPopup("YOU LOSE", true)
@@ -365,7 +392,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
-
+    // Disables the grid by making all buttons unclickable
     private fun disableGrid() {
         val board: LinearLayout = findViewById(R.id.Board)
         for (i in 0 until board.childCount) {
@@ -377,21 +404,22 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    // Restarts the game by resetting lives, remaining cells, and color mode
+    // Renews hearts and resets the game board to its initial state
     fun restartGame() {
         lives = 3
         remainingCells = 0
         colorMode = true
 
-        // Renew hearts
         heart1.setImageResource(R.drawable.heart_full)
         heart2.setImageResource(R.drawable.heart_full)
         heart3.setImageResource(R.drawable.heart_full)
 
-        // Reset the game board to its initial state
         initializeGame()
         dismissPopup()
     }
 
+    // Updates the hearts displayed on the screen based on the current number of lives
     private fun updateHearts() {
         when (lives) {
             2 -> heart3.setImageResource(R.drawable.heart_missing)
@@ -400,6 +428,7 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    // Go back to the main activity and finish the current activity
     fun goBack() {
         startActivity(Intent(this, MainActivity::class.java))
         finish()
