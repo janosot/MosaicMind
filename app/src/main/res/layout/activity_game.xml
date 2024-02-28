@@ -10,9 +10,9 @@
 
     <LinearLayout
         android:id="@+id/Board"
-        android:layout_width="340dp"
+        android:layout_width="330dp"
         android:layout_height="400dp"
-        android:layout_marginTop="216dp"
+        android:layout_marginTop="215dp"
         android:layout_marginEnd="1dp"
         android:gravity="center_vertical"
         android:orientation="vertical"
@@ -21,25 +21,24 @@
 
     <LinearLayout
         android:id="@+id/rowCaptions"
-        android:layout_width="0dp"
+        android:layout_width="75dp"
         android:layout_height="400dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="216dp"
-        android:layout_marginEnd="340dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="215dp"
+        android:layout_marginEnd="1dp"
         android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/Board"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <LinearLayout
         android:id="@+id/columnsCaptions"
-        android:layout_width="340dp"
-        android:layout_height="60dp"
-        android:layout_marginStart="70dp"
-        android:layout_marginTop="156dp"
+        android:layout_width="330dp"
+        android:layout_height="90dp"
+        android:layout_marginTop="124dp"
+        android:layout_marginEnd="1dp"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
     </LinearLayout>

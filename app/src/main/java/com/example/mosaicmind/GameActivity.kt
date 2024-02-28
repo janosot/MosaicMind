@@ -26,6 +26,7 @@ class GameActivity : AppCompatActivity() {
     private var lives: Int = 3
     private var remainingCells: Int = 0
     private var colorMode: Boolean = true
+    private var boardID: Int = -1
     private lateinit var currentBoard: Array<BooleanArray>
     private lateinit var finishedBoard: Array<BooleanArray>
 
@@ -43,6 +44,7 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        //Get difficulty from main menu and initialize size based on the difficulty
         difficulty = intent.getStringExtra("DIFFICULTY")
         size = when (difficulty) {
             "Easy" -> 5
@@ -51,10 +53,12 @@ class GameActivity : AppCompatActivity() {
             else -> 5
         }
 
+        //Initialize board arrays (one for current board state and one for finished board) and the game
         finishedBoard = Array(size) { BooleanArray(size) }
         currentBoard = Array(size) { BooleanArray(size) }
         initializeGame()
 
+        //Set button listeners
         val backButton: ImageButton = findViewById(R.id.backButton)
         backButton.setOnClickListener { _ -> goBack() }
 
@@ -92,6 +96,7 @@ class GameActivity : AppCompatActivity() {
 
         loadBoard(size)
 
+        //Add and initialize buttons based on game size
         for (rowNumber in 0 until size) {
             val row = LinearLayout(this)
             board.addView(row, LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, 1F))
@@ -104,11 +109,12 @@ class GameActivity : AppCompatActivity() {
         }
     }
 
+    // Load and parse JSON with finished boards with captions based on difficulty
     private fun loadBoard(size: Int) {
         val gameResource = when(difficulty) {
             "Easy" -> R.raw.easy
-            "Medium" -> R.raw.easy
-            "Difficult" -> R.raw.easy
+            "Medium" -> R.raw.medium
+            "Difficult" -> R.raw.hard
             else -> R.raw.easy
         }
 
@@ -123,7 +129,7 @@ class GameActivity : AppCompatActivity() {
             }
         }
 
-        setBoardCaptions()
+        createBoardCaptions()
     }
 
     private fun getBoardFromResource(resource: Int): JSONArray {
@@ -131,108 +137,123 @@ class GameActivity : AppCompatActivity() {
             .bufferedReader().use { it.readText() }
 
         val boardsArray = JSONArray(jsonText)
+        if(boardID == -1) {
+            boardID = Random.Default.nextInt(0, boardsArray.length())
+        }
         val boardObject =
-            boardsArray.getJSONObject(Random.Default.nextInt(0, boardsArray.length()))
+            boardsArray.getJSONObject(boardID)
 
         return boardObject.getJSONArray("board")
     }
 
-    private fun createCaption(caption: String): TextView {
+    //Helper function for creating TextViews for captions
+    private fun createCaption(caption: String, isRow: Boolean): TextView {
         val captionView = TextView(this)
         captionView.text = caption
-        captionView.isSingleLine = true
-        captionView.textSize = 22F
+
+        captionView.textSize = when(difficulty) {
+            "Easy" -> 22F
+            "Medium" -> 14F
+            "Difficult" -> 12F
+            else -> 22F
+        }
         captionView.setTypeface(null, Typeface.BOLD)
         captionView.gravity = Gravity.CENTER
+        if(!isRow) {
+            captionView.gravity = Gravity.CENTER or Gravity.BOTTOM
+        }
         captionView.setTextColor(Color.LTGRAY)
         return captionView
     }
 
-    private fun setBoardCaptions() {
+    //Count the game captions based on selected board and put then to their layouts
+    private fun createBoardCaptions() {
+        createRowCaptions()
+        createColumnCaptions()
+    }
+
+    private fun createRowCaptions() {
         var captions = mutableListOf<String>()
         val rowCaptions: LinearLayout = findViewById(R.id.rowCaptions)
-        val columnCaptions: LinearLayout = findViewById(R.id.columnsCaptions)
-        rowCaptions.removeAllViews()
-        columnCaptions.removeAllViews()
 
-        // Count rows
-        for (rowNumber in 0 until size) {
+        for(rowNumber in 0..<size) {
             var blockSize = 0
-            for (columnNumber in 0 until size) {
-                if (!finishedBoard[rowNumber][columnNumber]) {
-                    if (blockSize != 0) {
+            for (columnNumber in 0..<size) {
+                if(!finishedBoard[rowNumber][columnNumber]) {
+                    if(blockSize != 0) {
                         captions.add(blockSize.toString())
                     }
                     blockSize = 0
-                } else {
+                }
+                else {
                     blockSize++
                 }
             }
 
-            if (blockSize != 0) {
+            if(blockSize != 0) {
                 captions.add(blockSize.toString())
             }
             var text = ""
-            for (i in 0 until captions.size) {
+            for(i in 0..<captions.size) {
                 text += captions[i]
-                if (i != captions.size - 1) {
-                    text += ","
+                if(i != captions.size - 1) {
+                    text += " "
                 }
             }
 
-            rowCaptions.addView(
-                createCaption(text),
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    1F
-                )
-            )
+            rowCaptions.addView(createCaption(text, true),
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,1F))
             captions = mutableListOf()
         }
+    }
 
-        // Count columns
-        for (columnNumber in 0 until size) {
+    private fun createColumnCaptions() {
+        var captions = mutableListOf<String>()
+        val columnCaptions: LinearLayout = findViewById(R.id.columnsCaptions)
+
+        for(columnNumber in 0..<size) {
             var blockSize = 0
-            for (rowNumber in 0 until size) {
-                if (!finishedBoard[rowNumber][columnNumber]) {
-                    if (blockSize != 0) {
+            for (rowNumber in 0..<size) {
+                if(!finishedBoard[rowNumber][columnNumber]) {
+                    if(blockSize != 0) {
                         captions.add(blockSize.toString())
                     }
                     blockSize = 0
-                } else {
+                }
+                else {
                     blockSize++
                 }
             }
 
-            if (blockSize != 0) {
+            if(blockSize != 0) {
                 captions.add(blockSize.toString())
             }
 
+
             var text = ""
-            for (i in 0 until captions.size) {
+            for(i in 0..<captions.size) {
                 text += captions[i]
-                if (i != captions.size - 1) {
-                    text += ","
+                if(i != captions.size - 1) {
+                    text += "\n"
                 }
             }
-            columnCaptions.addView(
-                createCaption(text),
-                LinearLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    1F
-                )
-            )
+            columnCaptions.addView(createCaption(text, false),
+                LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.MATCH_PARENT,1F))
 
             captions = mutableListOf()
         }
     }
 
+    //Check if the clicked button is correct and update game state
     private fun checkCell(button: View) {
         button.isClickable = false
         val rowNumber: Int = button.id / 100
         val columnNumber: Int = button.id % 100
+
+        if(finishedBoard[rowNumber][columnNumber]) {
+            currentBoard[rowNumber][columnNumber] = true
+        }
+
         if (colorMode) {
             if (finishedBoard[rowNumber][columnNumber]) {
                 remainingCells--
@@ -244,7 +265,7 @@ class GameActivity : AppCompatActivity() {
             }
         } else {
             if (!finishedBoard[rowNumber][columnNumber]) {
-                button.setBackgroundColor(Color.RED)
+                button.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.holo_red_dark)
             } else {
 
                 button.backgroundTintList = ContextCompat.getColorStateList(this, R.color.darkGrey)
@@ -257,12 +278,47 @@ class GameActivity : AppCompatActivity() {
 
         checkGameStatus()
         fillCompletedRows()
+        fillCompletedColumns()
     }
 
     private fun fillCompletedRows() {
+        for (rowNumber in 0 until size) {
+            var completedRow = true
+            for (columnNumber in 0 until size) {
+                if(currentBoard[rowNumber][columnNumber] != finishedBoard[rowNumber][columnNumber]) {
+                    completedRow = false
+                }
+            }
 
+            if(completedRow) {
+                for (columnNumber in 0 until size) {
+                    if(!finishedBoard[rowNumber][columnNumber]) {
+                        val button: Button = findViewById(rowNumber*100 + columnNumber)
+                        button.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.holo_red_dark)
+                    }
+                }
+            }
+        }
     }
+    private fun fillCompletedColumns() {
+        for (columnNumber in 0 until size) {
+            var completedRow = true
+            for (rowNumber in 0 until size) {
+                if(currentBoard[rowNumber][columnNumber] != finishedBoard[rowNumber][columnNumber]) {
+                    completedRow = false
+                }
+            }
 
+            if(completedRow) {
+                for (rowNumber in 0 until size) {
+                    if(!finishedBoard[rowNumber][columnNumber]) {
+                        val button: Button = findViewById(rowNumber*100 + columnNumber)
+                        button.backgroundTintList = ContextCompat.getColorStateList(this, android.R.color.holo_red_dark)
+                    }
+                }
+            }
+        }
+    }
     private fun changeColorMode(view: View) {
         colorMode = !colorMode
         val button: Button = view as Button
