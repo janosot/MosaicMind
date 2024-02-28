@@ -274,15 +274,21 @@ class GameActivity : AppCompatActivity() {
         finish()
     }
 
-    private fun showPopup(message: String) {
+    private fun showPopup(message: String, showRestartButton: Boolean = true) {
         popupMessageTextView.text = message
         homeButton.setOnClickListener {
             goHome()
             dismissPopup()
         }
-        restartButton.setOnClickListener {
-            restartGame()
-            dismissPopup()
+
+        if (showRestartButton) {
+            restartButton.visibility = View.VISIBLE
+            restartButton.setOnClickListener {
+                restartGame()
+                dismissPopup()
+            }
+        } else {
+            restartButton.visibility = View.GONE
         }
 
         popupWindow.showAtLocation(findViewById(android.R.id.content), Gravity.CENTER, 0, 0)
@@ -293,11 +299,16 @@ class GameActivity : AppCompatActivity() {
     }
 
     private fun checkGameStatus() {
-        if (lives <= 0 || remainingCells == 0) {
-            showPopup(if (lives <= 0) "YOU LOSE" else "YOU WON")
+        if (lives <= 0) {
+            showPopup("YOU LOSE", true)
+            disableGrid()
+        }
+        if (remainingCells == 0) {
+            showPopup("YOU WON", false)
             disableGrid()
         }
     }
+
 
     private fun disableGrid() {
         val board: LinearLayout = findViewById(R.id.Board)
